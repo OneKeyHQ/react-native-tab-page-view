@@ -1,0 +1,41 @@
+{
+  "name": "react-native-tab-page-view",
+  "title": "React Native Tab Page View",
+  "version": "1.0.0",
+  "description": "TODO",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "files": [
+    "android",
+    "./index.ts",
+    "ios",
+    "src",
+    "react-native-tab-page-view.podspec"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/github_account/react-native-tab-page-view.git",
+    "baseUrl": "https://github.com/github_account/react-native-tab-page-view"
+  },
+  "keywords": [
+    "react-native"
+  ],
+  "author": {
+    "name": "Your Name",
+    "email": "yourname@email.com"
+  },
+  "license": "MIT",
+  "licenseFilename": "LICENSE",
+  "readmeFilename": "README.md",
+  "peerDependencies": {
+    "react": "^16.8.1",
+    "react-native": ">=0.60.0-rc.0 <1.0.x",
+    "prop-types": "^15.7.2"
+  },
+  "devDependencies": {
+    "react": "^16.9.0",
+    "react-native": "^0.61.5"
+  }
+}
