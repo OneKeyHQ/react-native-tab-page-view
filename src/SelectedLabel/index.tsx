@@ -11,8 +11,10 @@ interface SelectedLabelProps {
 
 export default class SelectedLabel extends Component<SelectedLabelProps> {
   override render() {
-    const { text, normalColor, selectedColor, selectedScale, style, ...rest } = this.props;
-    const scale = (style?.transform?.[0] as ScaleTransform)?.scale as Animated.Value;
+    const { text, normalColor, selectedColor, selectedScale, style, ...rest } =
+      this.props;
+    const scale = (style?.transform?.[0] as ScaleTransform)
+      ?.scale as Animated.Value;
     const color = scale.interpolate({
       inputRange: [1, selectedScale],
       outputRange: [normalColor, selectedColor],

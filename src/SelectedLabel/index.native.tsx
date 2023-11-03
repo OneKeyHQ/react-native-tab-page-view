@@ -1,8 +1,14 @@
-import React, { Component } from 'react'
-import { requireNativeComponent, Animated, Platform, processColor } from 'react-native';
+import React, { Component } from 'react';
+import {
+  requireNativeComponent,
+  Animated,
+  Platform,
+  processColor,
+} from 'react-native';
 
-const NativeSelectedLabel = requireNativeComponent('SelectedLabel')
+const NativeSelectedLabel = requireNativeComponent('SelectedLabel');
 
-const AnimatedSelectedLabel = Animated.createAnimatedComponent(NativeSelectedLabel)
+const AnimatedSelectedLabel =
+  Animated.createAnimatedComponent(NativeSelectedLabel);
 
-export default AnimatedSelectedLabel
+export default AnimatedSelectedLabel;

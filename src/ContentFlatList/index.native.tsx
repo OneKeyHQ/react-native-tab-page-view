@@ -1,3 +1,3 @@
-import { Animated } from 'react-native'
+import { Animated } from 'react-native';
 
-export default Animated.FlatList
+export default Animated.FlatList;

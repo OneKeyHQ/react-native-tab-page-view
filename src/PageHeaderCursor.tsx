@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { View, Animated, LayoutChangeEvent, LayoutRectangle, DimensionValue } from 'react-native';
+import {
+  View,
+  Animated,
+  LayoutChangeEvent,
+  LayoutRectangle,
+  DimensionValue,
+} from 'react-native';
 
 interface PageHeaderCursorProps {
   data: any[];
@@ -9,14 +15,17 @@ interface PageHeaderCursorProps {
 }
 
 export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
-
   override state: {
-	  itemContainerLayoutList: (LayoutRectangle | undefined)[];
+    itemContainerLayoutList: (LayoutRectangle | undefined)[];
   } = {
-	  itemContainerLayoutList: this.props.data.map(() => undefined),
-  }
+    itemContainerLayoutList: this.props.data.map(() => undefined),
+  };
 
-  public onLayoutItemContainer = (event: LayoutChangeEvent, item: any, index: number) => {
+  public onLayoutItemContainer = (
+    event: LayoutChangeEvent,
+    item: any,
+    index: number,
+  ) => {
     const itemContainerLayout = event.nativeEvent.layout;
     if (itemContainerLayout == this.state.itemContainerLayoutList[index]) {
       return;
@@ -34,7 +43,7 @@ export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
   };
 
   private _findFixCursorWidth = () => {
-    const { width } = this.props.cursorStyle as any
+    const { width } = this.props.cursorStyle as any;
     return width;
   };
 
@@ -49,7 +58,9 @@ export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
           } else {
             if (item) {
               if (fixCursorWidth) {
-                return isWidth ? fixCursorWidth : item.x + (item.width - fixCursorWidth) / 2.0;
+                return isWidth
+                  ? fixCursorWidth
+                  : item.x + (item.width - fixCursorWidth) / 2.0;
               } else {
                 return isWidth ? item.width : item.x + item.width / 2.0;
               }
@@ -57,7 +68,7 @@ export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
               return 0;
             }
           }
-        })
+        }),
       );
       itemList.push(isIndex ? itemList.length - 1 : 0);
       return itemList;
@@ -100,9 +111,16 @@ export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
     ];
 
     return (
-      <View pointerEvents="none" style={{ position: 'absolute', top: 0, left: 0, bottom: 0, right: 0 }}>
+      <View
+        pointerEvents="none"
+        style={{ position: 'absolute', top: 0, left: 0, bottom: 0, right: 0 }}
+      >
         <Animated.View style={containerStyle}>
-          {this.props.renderCursor ? this.props.renderCursor() : <View style={contentStyle}></View>}
+          {this.props.renderCursor ? (
+            this.props.renderCursor()
+          ) : (
+            <View style={contentStyle}></View>
+          )}
         </Animated.View>
       </View>
     );
