@@ -1,16 +1,17 @@
-import React, { Component, RefObject } from 'react';
+import React, { Component } from 'react';
 import {
   View,
   StyleSheet,
   Pressable,
   ScrollView,
-  ScrollViewProps,
   Animated,
   Easing,
   PixelRatio,
 } from 'react-native';
 import SelectedLabel from './SelectedLabel';
 import PageHeaderCursor from './PageHeaderCursor';
+import type { RefObject } from 'react';
+import type { ScrollViewProps } from 'react-native';
 
 interface PageHeaderViewProps extends ScrollViewProps {
   data: any[];
@@ -19,7 +20,7 @@ interface PageHeaderViewProps extends ScrollViewProps {
   renderItem?: (
     item: any,
     index: number,
-    titleStyle: object,
+    titleStyle: object
   ) => React.ReactNode;
   titleFromItem?: (item: any, index: number) => string;
   itemTitleStyle?: object;
@@ -40,7 +41,7 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
   private scrollPageIndexValue = new Animated.Value(this.scrollPageIndex);
   private nextScrollPageIndex = -1;
   private shouldHandlerAnimationValue = true;
-  private itemConfigList = this.props.data.map((item) => ({
+  private itemConfigList = this.props.data.map(() => ({
     _animtedEnabledValue: new Animated.Value(1),
   }));
   private itemContainerStyle = {
@@ -124,7 +125,7 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
     key: Animated.Value,
     value: number,
     duration: number = 0,
-    native: boolean = true,
+    native: boolean = true
   ) => {
     Animated.timing(key, {
       toValue: value,
@@ -147,10 +148,12 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
       inputRange: [index - 2, index - 1, index, index + 1, index + 2],
       outputRange: [1, 1, fontScale, 1, 1],
     });
-    const enabled = this.itemConfigList[index]._animtedEnabledValue;
+    const enabled =
+      this?.itemConfigList?.[index]?._animtedEnabledValue ??
+      new Animated.Value(1);
     scale = Animated.add(
       Animated.multiply(scale, enabled),
-      Animated.multiply(1, Animated.subtract(1, enabled)),
+      Animated.multiply(1, Animated.subtract(1, enabled))
     );
     const normalColor = this.itemTitleNormalStyle.color;
     const selectedColor = this.itemTitleSelectedStyle.color;
@@ -173,7 +176,7 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
     return <SelectedLabel {...this._itemTitleProps(item, index)} />;
   };
 
-  private _itemDidTouch = (item: any, index: number) => {
+  private _itemDidTouch = (_: any, index: number) => {
     if (this.props.shouldSelectedPageIndex) {
       let result = this.props.shouldSelectedPageIndex();
       if (result === false) {
@@ -192,7 +195,7 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
         this.scrollPageIndexValue,
         index,
         this.props.selectedPageIndexDuration,
-        true,
+        true
       );
     }
     this.props.onSelectedPageIndex?.(index);
@@ -231,7 +234,7 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
 
   override shouldComponentUpdate(nextProps: PageHeaderViewProps) {
     if (nextProps.data != this.props.data) {
-      this.itemConfigList = nextProps.data.map((item) => ({
+      this.itemConfigList = nextProps.data.map(() => ({
         _animtedEnabledValue: new Animated.Value(1),
       }));
       return true;

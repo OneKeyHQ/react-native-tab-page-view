@@ -1,4 +1,5 @@
-import React, { RefObject } from 'react';
+import React from 'react';
+import type { RefObject } from 'react';
 import { Animated } from 'react-native';
 import PageHeaderView from './PageHeaderView';
 import PageContentView from './PageContentView';
@@ -42,7 +43,7 @@ export default class PageManager extends React.Component<PageManagerProps> {
         {...props}
         onInitScrollPageIndexValue={(scrollPageIndexValue) => {
           this?.headerView?.current?.bindScrollPageIndexValue(
-            scrollPageIndexValue as Animated.Value,
+            scrollPageIndexValue as Animated.Value
           );
           scrollPageIndexValue.addListener(({ value }) => {
             let willReloadPageIndex = Math.round(value);

@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
-import {
-  View,
-  Animated,
-  LayoutChangeEvent,
-  LayoutRectangle,
-  DimensionValue,
-} from 'react-native';
+import { View, Animated } from 'react-native';
+import type { LayoutChangeEvent, LayoutRectangle } from 'react-native';
 
 interface PageHeaderCursorProps {
   data: any[];
@@ -23,8 +18,8 @@ export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
 
   public onLayoutItemContainer = (
     event: LayoutChangeEvent,
-    item: any,
-    index: number,
+    _: any,
+    index: number
   ) => {
     const itemContainerLayout = event.nativeEvent.layout;
     if (itemContainerLayout == this.state.itemContainerLayoutList[index]) {
@@ -68,7 +63,7 @@ export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
               return 0;
             }
           }
-        }),
+        })
       );
       itemList.push(isIndex ? itemList.length - 1 : 0);
       return itemList;

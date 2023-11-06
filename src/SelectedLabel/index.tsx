@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Animated, ViewStyle, ScaleTransform } from 'react-native';
+import { Animated } from 'react-native';
+import type { ViewStyle, ScaleTransform } from 'react-native';
 
 interface SelectedLabelProps {
   text: string;

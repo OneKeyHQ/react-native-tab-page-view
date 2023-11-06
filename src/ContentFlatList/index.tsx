@@ -1,11 +1,11 @@
-import React, { Component, RefObject } from 'react';
-import {
-  Animated,
-  PanResponder,
+import React, { Component } from 'react';
+import { Animated, PanResponder } from 'react-native';
+import type { RefObject } from 'react';
+import type {
+  FlatListProps,
   NativeSyntheticEvent,
   NativeScrollEvent,
   PanResponderGestureState,
-  FlatListProps,
 } from 'react-native';
 
 export interface ContentFlatListProps extends FlatListProps<any> {
@@ -40,7 +40,7 @@ export default class ContentFlatList extends Component<ContentFlatListProps> {
     });
   }
 
-  private _onPanGestureStart = (gestureState: PanResponderGestureState) => {
+  private _onPanGestureStart = (_: PanResponderGestureState) => {
     this.isDraging = true;
   };
 
@@ -54,7 +54,7 @@ export default class ContentFlatList extends Component<ContentFlatListProps> {
   private _onPanGestureEnd = (gestureState: PanResponderGestureState) => {
     const decelerationRate = 0.998;
     let decelerationDistance =
-      (gestureState.vx * gestureState.vx) / (2 * (1 - 0.998));
+      (gestureState.vx * gestureState.vx) / (2 * (1 - decelerationRate));
     decelerationDistance *= gestureState.vx > 0 ? 1 : -1;
     const finallyDistance = decelerationDistance + gestureState.dx;
     const reloadPageIndex =
@@ -85,7 +85,7 @@ export default class ContentFlatList extends Component<ContentFlatListProps> {
     this.scrollView?.current?.scrollToIndex(config);
   };
 
-  reloadScrollContainerWidth = (width: number) => {
+  reloadScrollContainerWidth = (_: number) => {
     if (!this.hasScrolledToInitScrollIndex) {
       this.hasScrolledToInitScrollIndex = true;
       if ((this.props.initialScrollIndex ?? 0) != 0) {

@@ -1,10 +1,4 @@
-import React, { Component } from 'react';
-import {
-  requireNativeComponent,
-  Animated,
-  Platform,
-  processColor,
-} from 'react-native';
+import { requireNativeComponent, Animated } from 'react-native';
 
 const NativeSelectedLabel = requireNativeComponent('SelectedLabel');
 

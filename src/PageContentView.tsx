@@ -1,18 +1,13 @@
-import React, { Component, RefObject } from 'react';
-import {
-  View,
-  Animated,
-  Dimensions,
-  FlatListProps,
-  ListRenderItemInfo,
-  PixelRatio,
-} from 'react-native';
+import React, { Component } from 'react';
+import { View, Animated, Dimensions, PixelRatio } from 'react-native';
 import ContentFlatList from './ContentFlatList';
+import type { RefObject } from 'react';
+import type { FlatListProps, ListRenderItemInfo } from 'react-native';
 
 interface PageContentViewProps extends FlatListProps<any> {
   shouldSelectedPageAnimation?: boolean;
   onInitScrollPageIndexValue?: (
-    scrollPageIndex: Animated.AnimatedDivision<string | number>,
+    scrollPageIndex: Animated.AnimatedDivision<string | number>
   ) => void;
 }
 
@@ -39,21 +34,21 @@ export default class PageContentView extends Component<PageContentViewProps> {
     bounces: false,
     pagingEnabled: true,
     shouldSelectedPageAnimation: true,
-    keyExtractor: (item: any, index: number) => `${index}`,
+    keyExtractor: (_: any, index: number) => `${index}`,
   };
 
   override state: PageContentViewState = {
     scrollViewWidth: PixelRatio.roundToNearestPixel(SCREEN_WIDTH),
   };
   private _scrollViewWidthValue = new Animated.Value(
-    this.state.scrollViewWidth,
+    this.state.scrollViewWidth
   );
   private _contentOffsetValueX = new Animated.Value(
-    this.props.initialScrollIndex ?? 0,
+    this.props.initialScrollIndex ?? 0
   );
   private _scrollPageIndexValue = Animated.divide(
     this._contentOffsetValueX,
-    this._scrollViewWidthValue,
+    this._scrollViewWidthValue
   );
   private _event = Animated.event(
     [
@@ -66,7 +61,7 @@ export default class PageContentView extends Component<PageContentViewProps> {
     ],
     {
       useNativeDriver: true,
-    },
+    }
   );
   private scrollView: RefObject<ContentFlatList> | null = React.createRef();
 
@@ -76,7 +71,7 @@ export default class PageContentView extends Component<PageContentViewProps> {
 
   scrollPageIndex = (
     pageIndex: number,
-    animated = this.props.shouldSelectedPageAnimation,
+    animated = this.props.shouldSelectedPageAnimation
   ) => {
     try {
       const scrollConfig = { index: pageIndex, animated: animated ?? false };
@@ -110,7 +105,7 @@ export default class PageContentView extends Component<PageContentViewProps> {
 
   override shouldComponentUpdate(
     nextProps: PageContentViewProps,
-    nextState: PageContentViewState,
+    nextState: PageContentViewState
   ) {
     return (
       nextProps.data != this.props.data ||
@@ -127,7 +122,7 @@ export default class PageContentView extends Component<PageContentViewProps> {
         style={[{ width: '100%' }, this.props.style]}
         renderItem={this._renderItem}
         onScroll={this._event}
-        getItemLayout={(item: any, index: number) => ({
+        getItemLayout={(_: any, index: number) => ({
           length: this.state.scrollViewWidth,
           offset: index * this.state.scrollViewWidth,
           index,
