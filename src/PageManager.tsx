@@ -1,4 +1,5 @@
-import React, { RefObject } from 'react';
+import React from 'react';
+import type { RefObject } from 'react';
 import { Animated } from 'react-native';
 import PageHeaderView from './PageHeaderView';
 import PageContentView from './PageContentView';
@@ -10,16 +11,15 @@ interface PageManagerProps {
 }
 
 export default class PageManager extends React.Component<PageManagerProps> {
-
   static defaultProps: PageManagerProps = {
     data: [],
     initialScrollIndex: 0,
-    onSelectedPageIndex: () => {}
-  }
-  
-  private headerView: RefObject<PageHeaderView> | null = React.createRef();
-  private contentView: RefObject<PageContentView> | null = React.createRef();
-  private pageIndex: number = -1;
+    onSelectedPageIndex: () => {},
+  };
+
+  headerView: RefObject<PageHeaderView> | null = React.createRef();
+  contentView: RefObject<PageContentView> | null = React.createRef();
+  pageIndex: number = -1;
 
   renderHeaderView = (props: any) => {
     return (
@@ -42,7 +42,9 @@ export default class PageManager extends React.Component<PageManagerProps> {
         {...this.props}
         {...props}
         onInitScrollPageIndexValue={(scrollPageIndexValue) => {
-          this?.headerView?.current?.bindScrollPageIndexValue(scrollPageIndexValue as Animated.Value);
+          this?.headerView?.current?.bindScrollPageIndexValue(
+            scrollPageIndexValue as Animated.Value
+          );
           scrollPageIndexValue.addListener(({ value }) => {
             let willReloadPageIndex = Math.round(value);
             if (willReloadPageIndex !== this.pageIndex) {
