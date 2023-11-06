@@ -104,7 +104,7 @@ export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
 
     const contentStyle = {
       ...this.props.cursorStyle,
-      ...{ left: 0, right: 0, width: fixCursorWidth ?? 1 },
+      ...{ left: null, right: null, width: fixCursorWidth ?? 1 },
     };
 
     return (
