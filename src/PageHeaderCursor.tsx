@@ -102,10 +102,10 @@ export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
       alignItems: 'center',
     };
 
-    const contentStyle = [
-      this.props.cursorStyle,
-      { left: null, right: null, width: fixCursorWidth ?? 1 },
-    ];
+    const contentStyle = {
+      ...this.props.cursorStyle,
+      ...{ left: 0, right: 0, width: fixCursorWidth ?? 1 },
+    };
 
     return (
       <View
