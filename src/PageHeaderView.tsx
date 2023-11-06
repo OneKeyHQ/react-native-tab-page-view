@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import type { RefObject } from 'react';
 import {
   View,
   StyleSheet,
@@ -8,10 +9,9 @@ import {
   Easing,
   PixelRatio,
 } from 'react-native';
+import type { ScrollViewProps } from 'react-native';
 import SelectedLabel from './SelectedLabel';
 import PageHeaderCursor from './PageHeaderCursor';
-import type { RefObject } from 'react';
-import type { ScrollViewProps } from 'react-native';
 
 interface PageHeaderViewProps extends ScrollViewProps {
   data: any[];
@@ -41,7 +41,7 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
   private scrollPageIndexValue = new Animated.Value(this.scrollPageIndex);
   private nextScrollPageIndex = -1;
   private shouldHandlerAnimationValue = true;
-  private itemConfigList = this.props.data.map(() => ({
+  private itemConfigList = this.props.data.map((_: any) => ({
     _animtedEnabledValue: new Animated.Value(1),
   }));
   private itemContainerStyle = {
@@ -185,10 +185,9 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
     }
     this.nextScrollPageIndex = index;
     this.itemConfigList.map((item, _index) => {
-      let enabledAnimation = Math.abs(index - this.scrollPageIndex) <= 1;
-      enabledAnimation =
-        enabledAnimation || _index === index || _index === this.scrollPageIndex;
-      item._animtedEnabledValue.setValue(enabledAnimation ? 1 : 0);
+      item._animtedEnabledValue.setValue(
+        _index === index || _index === this.scrollPageIndex ? 1 : 0
+      );
     });
     if (this.shouldHandlerAnimationValue) {
       this._animation(
@@ -233,8 +232,8 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
   };
 
   override shouldComponentUpdate(nextProps: PageHeaderViewProps) {
-    if (nextProps.data != this.props.data) {
-      this.itemConfigList = nextProps.data.map(() => ({
+    if (nextProps.data !== this.props.data) {
+      this.itemConfigList = nextProps.data.map((_: any) => ({
         _animtedEnabledValue: new Animated.Value(1),
       }));
       return true;

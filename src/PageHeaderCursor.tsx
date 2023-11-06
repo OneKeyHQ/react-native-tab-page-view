@@ -44,6 +44,7 @@ export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
 
   private _reloadPageIndexValue = (isWidth: boolean) => {
     const fixCursorWidth = this._findFixCursorWidth();
+    const { left = 0, right = 0 } = this?.props?.cursorStyle as any;
     const rangeList = (isIndex: boolean) => {
       const itemList = [isIndex ? -1 : 0];
       itemList.push(
@@ -57,7 +58,8 @@ export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
                   ? fixCursorWidth
                   : item.x + (item.width - fixCursorWidth) / 2.0;
               } else {
-                return isWidth ? item.width : item.x + item.width / 2.0;
+                const width = item.width - left - right;
+                return isWidth ? width : item.x + width / 2.0 + left;
               }
             } else {
               return 0;
@@ -102,7 +104,7 @@ export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
 
     const contentStyle = [
       this.props.cursorStyle,
-      { width: fixCursorWidth ?? 1 },
+      { left: null, right: null, width: fixCursorWidth ?? 1 },
     ];
 
     return (
