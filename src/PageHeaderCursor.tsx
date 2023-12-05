@@ -69,11 +69,10 @@ export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
                   ? fixCursorWidth
                   : item.x + (item.width - fixCursorWidth) / 2.0;
               } else {
-                const width =
-                  (item.width * Number(percentWidth ?? 100)) / 100 -
-                  left -
-                  right;
-                return isWidth ? width : item.x + width / 2.0 + left;
+                const width = item.width - left - right;
+                return isWidth
+                  ? (width * Number(percentWidth ?? 100)) / 100
+                  : item.x + width / 2.0 + left;
               }
             } else {
               return 0;
