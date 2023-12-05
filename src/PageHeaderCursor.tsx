@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import type { RefObject } from 'react';
 import { View, Animated } from 'react-native';
-import type { LayoutChangeEvent, LayoutRectangle } from 'react-native';
+import type { LayoutRectangle } from 'react-native';
 
 interface PageHeaderCursorProps {
   data: any[];
@@ -9,42 +10,52 @@ interface PageHeaderCursorProps {
   renderCursor?: () => React.ReactElement | null;
 }
 
+interface PageHeaderCursorState {
+  itemContainerLayoutList: (LayoutRectangle | undefined)[];
+}
+
 export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
-  override state: {
-    itemContainerLayoutList: (LayoutRectangle | undefined)[];
-  } = {
+  override state: PageHeaderCursorState = {
     itemContainerLayoutList: this.props.data.map(() => undefined),
   };
 
-  public onLayoutItemContainer = (
-    event: LayoutChangeEvent,
-    _: any,
-    index: number
-  ) => {
-    const itemContainerLayout = event.nativeEvent.layout;
-    if (itemContainerLayout == this.state.itemContainerLayoutList[index]) {
-      return;
-    }
-    this.state.itemContainerLayoutList[index] = itemContainerLayout;
-    let fullLoadItemContainerLayout = true;
-    this.state.itemContainerLayoutList.forEach((item) => {
-      if (!item) {
-        fullLoadItemContainerLayout = false;
-      }
+  public reloadItemListContainerLayout = (refList: Array<RefObject<View>>) => {
+    this.state.itemContainerLayoutList = this.props.data.map(() => undefined);
+    refList.map((ref, index) => {
+      ref?.current?.measure((x, y, width, height) => {
+        if (x + width <= 0) {
+          return;
+        }
+        this.state.itemContainerLayoutList[index] = { x, y, width, height };
+        if (
+          this.state.itemContainerLayoutList.findIndex((item) => !item) == -1
+        ) {
+          this.setState(this.state);
+        }
+      });
     });
-    if (fullLoadItemContainerLayout) {
-      this.forceUpdate();
+  };
+
+  private _findPercentCursorWidth = () => {
+    const { width } = this.props.cursorStyle as any;
+    if (typeof width == 'string') {
+      return width.match(/(\d+(\.\d+)?)%/)?.[1];
     }
+    return null;
   };
 
   private _findFixCursorWidth = () => {
     const { width } = this.props.cursorStyle as any;
+    if (this._findPercentCursorWidth()) {
+      return null;
+    }
     return width;
   };
 
   private _reloadPageIndexValue = (isWidth: boolean) => {
     const fixCursorWidth = this._findFixCursorWidth();
     const { left = 0, right = 0 } = this?.props?.cursorStyle as any;
+    const percentWidth = this._findPercentCursorWidth();
     const rangeList = (isIndex: boolean) => {
       const itemList = [isIndex ? -1 : 0];
       itemList.push(
@@ -58,7 +69,10 @@ export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
                   ? fixCursorWidth
                   : item.x + (item.width - fixCursorWidth) / 2.0;
               } else {
-                const width = item.width - left - right;
+                const width =
+                  (item.width * Number(percentWidth ?? 100)) / 100 -
+                  left -
+                  right;
                 return isWidth ? width : item.x + width / 2.0 + left;
               }
             } else {
@@ -77,11 +91,15 @@ export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
     });
   };
 
-  override shouldComponentUpdate(nextProps: PageHeaderCursorProps) {
-    if (nextProps.data !== this.props.data) {
-      this.setState({
-        itemContainerLayoutList: nextProps.data.map(() => false),
-      });
+  override shouldComponentUpdate(
+    nextProps: PageHeaderCursorProps,
+    nextState: PageHeaderCursorState
+  ) {
+    if (
+      nextProps.data !== this.props.data ||
+      nextProps.cursorStyle !== this.props.cursorStyle ||
+      nextState !== this.state
+    ) {
       return true;
     }
     return false;
