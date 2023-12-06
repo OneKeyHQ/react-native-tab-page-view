@@ -19,20 +19,26 @@ export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
     itemContainerLayoutList: this.props.data.map(() => undefined),
   };
 
-  public reloadItemListContainerLayout = (refList: Array<RefObject<View>>) => {
+  public reloadItemListContainerLayout = (
+    refList: Array<RefObject<View>>,
+    scrollRef: RefObject<View>
+  ) => {
     this.state.itemContainerLayoutList = this.props.data.map(() => undefined);
     refList.map((ref, index) => {
-      ref?.current?.measure((x, y, width, height) => {
-        if (x + width <= 0) {
-          return;
+      ref?.current?.measureLayout(
+        scrollRef.current as any,
+        (x: number, y: number, width: number, height: number) => {
+          if (x + width <= 0) {
+            return;
+          }
+          this.state.itemContainerLayoutList[index] = { x, y, width, height };
+          if (
+            this.state.itemContainerLayoutList.findIndex((item) => !item) == -1
+          ) {
+            this.setState(this.state);
+          }
         }
-        this.state.itemContainerLayoutList[index] = { x, y, width, height };
-        if (
-          this.state.itemContainerLayoutList.findIndex((item) => !item) == -1
-        ) {
-          this.setState(this.state);
-        }
-      });
+      );
     });
   };
 

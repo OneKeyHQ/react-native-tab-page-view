@@ -253,7 +253,8 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
         <ScrollView
           onContentSizeChange={(width, height) => {
             this?.cursor?.current?.reloadItemListContainerLayout(
-              this.itemConfigList.map((item) => item._containerRef)
+              this.itemConfigList.map((item) => item._containerRef),
+              this.scrollView as any
             );
             this?.props?.onContentSizeChange?.(width, height);
           }}
