@@ -2,9 +2,9 @@
   "name": "@onekeyfe/react-native-tab-page-view",
   "version": "1.0.0",
   "description": "React Native Tab Page View",
-  "main": "src/index",
-  "module": "src/index",
-  "types": "src/index",
+  "main": "lib/commonjs/index",
+  "module": "lib/module/index",
+  "types": "lib/typescript/src/index.d.ts",
   "react-native": "src/index",
   "source": "src/index",
   "files": [
