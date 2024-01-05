@@ -69,6 +69,9 @@ export default class ContentFlatList extends Component<ContentFlatListProps> {
   };
 
   private _onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (event.nativeEvent.layoutMeasurement.width <= 0) {
+      return;
+    }
     this.props.onScroll && this.props.onScroll(event);
     if (this.isDraging) {
       return;
