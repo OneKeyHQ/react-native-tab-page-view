@@ -30,7 +30,7 @@ interface PageHeaderViewProps extends ScrollViewProps {
   renderCursor?: () => React.ReactElement | null;
   onSelectedPageIndex?: (index: number) => void;
   selectedPageIndexDuration?: number;
-  shouldSelectedPageIndex?: () => boolean;
+  shouldSelectedPageIndex?: (pageIndex: number) => boolean;
   scrollContainerStyle?: object;
   contentContainerStyle?: object;
   containerStyle?: object;
@@ -102,20 +102,36 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
 
   private addScrollPageIndexListener = () => {
     this.scrollPageIndexValue.addListener(({ value }) => {
-      if (Math.abs(this.nextScrollPageIndex - value) <= 0.01) {
+      const scrollIsStop = Math.floor(value) === value;
+      if (
+        this.props.shouldSelectedPageIndex &&
+        this.nextScrollPageIndex === -1 &&
+        scrollIsStop &&
+        value !== this.scrollPageIndex &&
+        !this.props.shouldSelectedPageIndex(value)
+      ) {
+        this.props?.onSelectedPageIndex?.(this.scrollPageIndex);
+        this.scrollPageIndex = value;
+        return;
+      }
+      if (
+        this.nextScrollPageIndex >= 0 &&
+        Math.abs(this.nextScrollPageIndex - value) <= 0.01
+      ) {
+        this.nextScrollPageIndex = -1;
         this.itemConfigList.map((item, _index) => {
           item._animtedEnabledValue.setValue(1);
         });
       }
       const newPageIndex = Math.round(value);
-      if (newPageIndex != this.scrollPageIndex) {
+      if (newPageIndex != this.scrollPageIndex && scrollIsStop) {
         const itemLayout = this?.cursor?.current?.state
           ?.itemContainerLayoutList?.[newPageIndex] ?? { x: 0, width: 0 };
         this?.scrollView?.current?.scrollTo({
           x: itemLayout.x - itemLayout.width,
         });
+        this.scrollPageIndex = newPageIndex;
       }
-      this.scrollPageIndex = newPageIndex;
     });
   };
 
@@ -185,7 +201,7 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
 
   private _itemDidTouch = (_: any, index: number) => {
     if (this.props.shouldSelectedPageIndex) {
-      let result = this.props.shouldSelectedPageIndex();
+      const result = this.props.shouldSelectedPageIndex(index);
       if (result === false) {
         return;
       }
@@ -238,6 +254,7 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
 
   override shouldComponentUpdate(nextProps: PageHeaderViewProps) {
     if (nextProps.data !== this.props.data) {
+      this.nextScrollPageIndex = -1;
       this.itemConfigList = nextProps.data.map((_: any) => ({
         _animtedEnabledValue: new Animated.Value(1),
         _containerRef: React.createRef<View>(),

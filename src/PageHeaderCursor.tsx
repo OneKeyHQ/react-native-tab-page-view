@@ -133,7 +133,17 @@ export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
     return (
       <View
         pointerEvents="none"
-        style={{ position: 'absolute', top: 0, left: 0, bottom: 0, right: 0 }}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          opacity:
+            this.state.itemContainerLayoutList.findIndex((item) => !item) == -1
+              ? 1
+              : 0,
+        }}
       >
         <Animated.View style={containerStyle}>
           {this.props.renderCursor ? (
