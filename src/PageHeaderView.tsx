@@ -30,7 +30,7 @@ interface PageHeaderViewProps extends ScrollViewProps {
   renderCursor?: () => React.ReactElement | null;
   onSelectedPageIndex?: (index: number) => void;
   selectedPageIndexDuration?: number;
-  shouldSelectedPageIndex?: () => boolean;
+  shouldSelectedPageIndex?: (pageIndex: number) => boolean;
   scrollContainerStyle?: object;
   contentContainerStyle?: object;
   containerStyle?: object;
@@ -43,34 +43,41 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
   private shouldHandlerAnimationValue = true;
   private itemConfigList = this.props.data.map((_: any) => ({
     _animtedEnabledValue: new Animated.Value(1),
+    _containerRef: React.createRef<View>(),
   }));
-  private itemContainerStyle = {
-    height: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...this.props.itemContainerStyle,
-  } as { flex?: number } & object;
-  private itemTitleNormalStyle: { fontSize: number; color: string } & object = {
+  private itemContainerStyle = () =>
+    ({
+      height: '100%',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      ...this.props.itemContainerStyle,
+    } as { flex?: number } & object);
+  private itemTitleNormalStyle: () => {
+    fontSize: number;
+    color: string;
+  } & object = () => ({
     fontSize: 16,
     color: '#333',
     ...this.props.itemTitleStyle,
     ...this.props.itemTitleNormalStyle,
-  };
-  private itemTitleSelectedStyle: { fontSize: number; color: string } & object =
-    {
-      ...this.itemTitleNormalStyle,
-      fontSize: 20,
-      color: '#666',
-      ...this.props.itemTitleSelectedStyle,
-    };
-  private cursorStyle = {
+  });
+  private itemTitleSelectedStyle: () => {
+    fontSize: number;
+    color: string;
+  } & object = () => ({
+    ...this.itemTitleNormalStyle(),
+    fontSize: 20,
+    color: '#666',
+    ...this.props.itemTitleSelectedStyle,
+  });
+  private cursorStyle = () => ({
     position: 'absolute',
     bottom: 0,
     height: 1 / PixelRatio.get(),
     backgroundColor: '#999',
     ...this.props.cursorStyle,
-  };
+  });
   private scrollView: RefObject<ScrollView> = React.createRef();
   private cursor: RefObject<PageHeaderCursor> = React.createRef();
 
@@ -95,20 +102,36 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
 
   private addScrollPageIndexListener = () => {
     this.scrollPageIndexValue.addListener(({ value }) => {
-      if (Math.abs(this.nextScrollPageIndex - value) <= 0.01) {
+      const scrollIsStop = Math.floor(value) === value;
+      if (
+        this.props.shouldSelectedPageIndex &&
+        this.nextScrollPageIndex === -1 &&
+        scrollIsStop &&
+        value !== this.scrollPageIndex &&
+        !this.props.shouldSelectedPageIndex(value)
+      ) {
+        this.props?.onSelectedPageIndex?.(this.scrollPageIndex);
+        this.scrollPageIndex = value;
+        return;
+      }
+      if (
+        this.nextScrollPageIndex >= 0 &&
+        Math.abs(this.nextScrollPageIndex - value) <= 0.01
+      ) {
+        this.nextScrollPageIndex = -1;
         this.itemConfigList.map((item, _index) => {
           item._animtedEnabledValue.setValue(1);
         });
       }
       const newPageIndex = Math.round(value);
-      if (newPageIndex != this.scrollPageIndex) {
+      if (newPageIndex != this.scrollPageIndex && scrollIsStop) {
         const itemLayout = this?.cursor?.current?.state
           ?.itemContainerLayoutList?.[newPageIndex] ?? { x: 0, width: 0 };
         this?.scrollView?.current?.scrollTo({
           x: itemLayout.x - itemLayout.width,
         });
+        this.scrollPageIndex = newPageIndex;
       }
-      this.scrollPageIndex = newPageIndex;
     });
   };
 
@@ -138,9 +161,9 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
   private _itemTitleProps = (item: any, index: number) => {
     let fontScale =
       1 +
-      (this.itemTitleSelectedStyle.fontSize -
-        this.itemTitleNormalStyle.fontSize) /
-        this.itemTitleNormalStyle.fontSize;
+      (this.itemTitleSelectedStyle().fontSize -
+        this.itemTitleNormalStyle().fontSize) /
+        this.itemTitleNormalStyle().fontSize;
     if (fontScale === 1) {
       fontScale = 1.0001;
     }
@@ -155,10 +178,10 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
       Animated.multiply(scale, enabled),
       Animated.multiply(1, Animated.subtract(1, enabled))
     );
-    const normalColor = this.itemTitleNormalStyle.color;
-    const selectedColor = this.itemTitleSelectedStyle.color;
+    const normalColor = this.itemTitleNormalStyle().color;
+    const selectedColor = this.itemTitleSelectedStyle().color;
     return {
-      ...this.itemTitleNormalStyle,
+      ...this.itemTitleNormalStyle(),
       normalColor,
       selectedColor,
       selectedScale: fontScale,
@@ -166,7 +189,7 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
         ? this.props.titleFromItem(item, index)
         : item,
       style: {
-        ...this.itemTitleNormalStyle,
+        ...this.itemTitleNormalStyle(),
         transform: [{ scale }],
       },
     };
@@ -178,7 +201,7 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
 
   private _itemDidTouch = (_: any, index: number) => {
     if (this.props.shouldSelectedPageIndex) {
-      let result = this.props.shouldSelectedPageIndex();
+      const result = this.props.shouldSelectedPageIndex(index);
       if (result === false) {
         return;
       }
@@ -208,10 +231,8 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
     return (
       <Pressable
         key={index}
-        style={this.itemContainerStyle}
-        onLayout={(event) =>
-          this?.cursor?.current?.onLayoutItemContainer(event, item, index)
-        }
+        ref={this?.itemConfigList?.[index]?._containerRef}
+        style={this.itemContainerStyle()}
         onPress={() => this._itemDidTouch(item, index)}
       >
         {content}
@@ -226,15 +247,17 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
         data={this.props.data}
         scrollPageIndexValue={this.scrollPageIndexValue}
         renderCursor={this.props.renderCursor}
-        cursorStyle={this.cursorStyle}
+        cursorStyle={this.cursorStyle()}
       />
     );
   };
 
   override shouldComponentUpdate(nextProps: PageHeaderViewProps) {
     if (nextProps.data !== this.props.data) {
+      this.nextScrollPageIndex = -1;
       this.itemConfigList = nextProps.data.map((_: any) => ({
         _animtedEnabledValue: new Animated.Value(1),
+        _containerRef: React.createRef<View>(),
       }));
       return true;
     }
@@ -245,9 +268,16 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
     return (
       <View style={this.props.style}>
         <ScrollView
+          onContentSizeChange={(width, height) => {
+            this?.cursor?.current?.reloadItemListContainerLayout(
+              this.itemConfigList.map((item) => item._containerRef),
+              this.scrollView as any
+            );
+            this?.props?.onContentSizeChange?.(width, height);
+          }}
           {...this.props}
           contentContainerStyle={[
-            { width: this.itemContainerStyle?.flex ? '100%' : null },
+            { width: this.itemContainerStyle()?.flex ? '100%' : null },
             this.props.scrollContainerStyle,
           ]}
           ref={this.scrollView}

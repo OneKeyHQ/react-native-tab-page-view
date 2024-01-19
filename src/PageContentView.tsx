@@ -2,7 +2,11 @@ import React, { Component } from 'react';
 import { View, Animated, Dimensions, PixelRatio } from 'react-native';
 import ContentFlatList from './ContentFlatList';
 import type { RefObject } from 'react';
-import type { FlatListProps, ListRenderItemInfo } from 'react-native';
+import type {
+  FlatListProps,
+  LayoutChangeEvent,
+  ListRenderItemInfo,
+} from 'react-native';
 
 interface PageContentViewProps extends FlatListProps<any> {
   shouldSelectedPageAnimation?: boolean;
@@ -79,13 +83,13 @@ export default class PageContentView extends Component<PageContentViewProps> {
     } catch (e) {}
   };
 
-  private _onLayout = ({
-    nativeEvent: {
-      layout: { width },
-    },
-  }: {
-    nativeEvent: { layout: { width: number } };
-  }) => {
+  private _onLayout = (event: LayoutChangeEvent) => {
+    this.props.onLayout?.(event);
+    const {
+      nativeEvent: {
+        layout: { width },
+      },
+    } = event;
     const reloadWidth = PixelRatio.roundToNearestPixel(width);
     if (reloadWidth !== this.state.scrollViewWidth && reloadWidth > 0) {
       this._scrollViewWidthValue.setValue(reloadWidth);
