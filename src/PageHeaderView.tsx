@@ -265,8 +265,9 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
   }
 
   override render() {
+    const { style, ...restProps } = this.props;
     return (
-      <View style={this.props.style}>
+      <View style={style}>
         <ScrollView
           onContentSizeChange={(width, height) => {
             this?.cursor?.current?.reloadItemListContainerLayout(
@@ -275,7 +276,7 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
             );
             this?.props?.onContentSizeChange?.(width, height);
           }}
-          {...this.props}
+          {...restProps}
           contentContainerStyle={[
             { width: this.itemContainerStyle()?.flex ? '100%' : null },
             this.props.scrollContainerStyle,
