@@ -17,6 +17,11 @@ export default class PageManager extends React.Component<PageManagerProps> {
     onSelectedPageIndex: () => {},
   };
 
+  constructor(props: PageManagerProps) {
+    super(props);
+    this.pageIndex = props.initialScrollIndex ?? 0;
+  }
+
   headerView: RefObject<PageHeaderView> | null = React.createRef();
   contentView: RefObject<PageContentView> | null = React.createRef();
   pageIndex: number = -1;
