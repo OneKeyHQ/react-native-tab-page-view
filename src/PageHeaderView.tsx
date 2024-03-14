@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import type { RefObject } from 'react';
 import {
   View,
-  StyleSheet,
   Pressable,
   ScrollView,
   Animated,
@@ -276,6 +275,7 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
             );
             this?.props?.onContentSizeChange?.(width, height);
           }}
+          style={this.props.containerStyle}
           {...restProps}
           contentContainerStyle={[
             { width: this.itemContainerStyle()?.flex ? '100%' : null },
@@ -283,9 +283,6 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
           ]}
           ref={this.scrollView}
         >
-          <View
-            style={[StyleSheet.absoluteFill, this.props.containerStyle]}
-          ></View>
           <View
             style={[
               { minWidth: '100%', flexDirection: 'row', alignItems: 'center' },
