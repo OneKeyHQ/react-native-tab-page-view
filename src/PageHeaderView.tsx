@@ -79,6 +79,7 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
   });
   private scrollView: RefObject<ScrollView> = React.createRef();
   private cursor: RefObject<PageHeaderCursor> = React.createRef();
+  private scrollViewWidth = 0;
 
   static defaultProps: PageHeaderViewProps = {
     data: [],
@@ -127,7 +128,7 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
         const itemLayout = this?.cursor?.current?.state
           ?.itemContainerLayoutList?.[newPageIndex] ?? { x: 0, width: 0 };
         this?.scrollView?.current?.scrollTo({
-          x: itemLayout.x - itemLayout.width,
+          x: itemLayout.x + itemLayout.width / 2.0 - this.scrollViewWidth / 2.0,
         });
         this.scrollPageIndex = newPageIndex;
       }
@@ -274,6 +275,10 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
               this.scrollView as any
             );
             this?.props?.onContentSizeChange?.(width, height);
+          }}
+          onLayout={(event) => {
+            this.scrollViewWidth = event.nativeEvent.layout.width;
+            this?.props?.onLayout?.(event);
           }}
           style={this.props.containerStyle}
           {...restProps}
