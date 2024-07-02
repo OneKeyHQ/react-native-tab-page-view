@@ -91,7 +91,11 @@ export default class PageContentView extends Component<PageContentViewProps> {
       },
     } = event;
     const reloadWidth = PixelRatio.roundToNearestPixel(width);
-    if (reloadWidth !== this.state.scrollViewWidth && reloadWidth > 0) {
+    if (
+      reloadWidth !== this.state.scrollViewWidth &&
+      reloadWidth > 0 &&
+      (this?.props?.data?.length ?? 0) > 0
+    ) {
       this._scrollViewWidthValue.setValue(reloadWidth);
       this.setState({ scrollViewWidth: reloadWidth }, () => {
         this?.scrollView?.current?.reloadScrollContainerWidth?.(reloadWidth);
