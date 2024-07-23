@@ -22,7 +22,8 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency "React"
-  # ...
-  # s.dependency "..."
+
+  s.dependency "JXPagingView/Pager", "~> 2.1.2"
+  s.dependency "JXCategoryView", "~> 1.6.1"
 end
 

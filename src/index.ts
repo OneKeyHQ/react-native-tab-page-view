@@ -3,4 +3,17 @@ import PageHeaderView from './PageHeaderView';
 import PageContentView from './PageContentView';
 import PageManager from './PageManager';
 
-export { SelectedLabel, PageHeaderView, PageContentView, PageManager };
+import { requireNativeComponent, Platform } from 'react-native';
+
+const NestedTabView =
+  Platform.OS === 'ios' || Platform.OS === 'android'
+    ? requireNativeComponent('NestedTabView')
+    : undefined;
+
+export {
+  SelectedLabel,
+  PageHeaderView,
+  PageContentView,
+  PageManager,
+  NestedTabView,
+};

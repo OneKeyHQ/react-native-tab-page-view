@@ -1,4 +1,4 @@
-package com.onekey.tabpage;
+package so.onekey.app.wallet.selectedLabel;
 
 import android.content.Context;
 import android.graphics.Typeface;
