@@ -37,7 +37,7 @@ import java.util.List;
 import so.onekey.app.wallet.widget.listener.OnTabSelectListener;
 import so.onekey.app.wallet.widget.transition.ITabScaleTransformer;
 import so.onekey.app.wallet.widget.transition.TabScaleTransformer;
-import so.onekey.app.wallet.R;
+import so.onekey.app.wallet.widget.R;
 
 /**
  * 滑动TabLayout,对于ViewPager的依赖性强

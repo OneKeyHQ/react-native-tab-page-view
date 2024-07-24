@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-	namespace 'so.onekey.app.wallet'
+	namespace 'so.onekey.app.wallet.widget'
     compileSdk rootProject.ext.compileSdkVersion
 
     defaultConfig {

@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
-import so.onekey.app.wallet.R
+import so.onekey.app.wallet.widget.R
 
 class ViewFragment constructor(val childView: View) : Fragment() {
     override fun onCreateView(

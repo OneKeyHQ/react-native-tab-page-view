@@ -21,7 +21,7 @@ import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.uimanager.UIManagerModule
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
-import so.onekey.app.wallet.R
+import so.onekey.app.wallet.widget.R
 import so.onekey.app.wallet.utils.Utils
 import so.onekey.app.wallet.viewManager.homePage.TabProps
 import so.onekey.app.wallet.viewManager.homePage.event.PageSelectedEvent

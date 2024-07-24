@@ -1,4 +1,4 @@
-package so.onekey.app.wallet
+package so.onekey.app.wallet.widget
 
 import com.facebook.react.uimanager.ViewManager
 import com.facebook.react.ReactPackage
