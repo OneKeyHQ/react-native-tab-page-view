@@ -1,6 +1,6 @@
 {
   "name": "@onekeyfe/react-native-tab-page-view",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "React Native Tab Page View",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
