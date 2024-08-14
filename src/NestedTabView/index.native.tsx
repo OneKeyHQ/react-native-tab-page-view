@@ -16,7 +16,9 @@ function NestedTabViewContainer(props: any) {
       }}
       onMoveShouldSetResponderCapture={(e: any) => {
         const { locationX: x, locationY: y } = e.nativeEvent;
-        return Math.abs(x - point.current.x) > Math.abs(y - point.current.y);
+        const diffX = Math.abs(x - point.current.x);
+        const diffY = Math.abs(y - point.current.y);
+        return diffX + diffY > 5 && diffX > diffY;
       }}
       {...props}
     />
