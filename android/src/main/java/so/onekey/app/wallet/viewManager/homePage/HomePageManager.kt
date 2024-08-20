@@ -118,6 +118,11 @@ class HomePageManager : ViewGroupManager<HomePageView>() {
         view.setSlideDisable(disable)
     }
 
+    @ReactProp(name = "refresh")
+    fun setRefresh(view: HomePageView, refresh: Boolean) {
+        view.setRefresh(refresh)
+    }
+
     override fun getExportedCustomBubblingEventTypeConstants(): Map<String, Any> {
         return mapOf(
             PageSelectedEvent.EVENT_NAME to mapOf(
