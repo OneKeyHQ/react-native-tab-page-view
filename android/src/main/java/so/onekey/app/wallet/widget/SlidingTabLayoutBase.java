@@ -214,7 +214,7 @@ public abstract class SlidingTabLayoutBase extends HorizontalScrollView {
         mTabSpaceEqual = ta.getBoolean(R.styleable.SlidingTabLayout_tl_tab_space_equal, false);
         mTabWidth = ta.getDimension(R.styleable.SlidingTabLayout_tl_tab_width, dp2px(-1));
         mTabPadding = ta.getDimension(R.styleable.SlidingTabLayout_tl_tab_padding,
-                mTabSpaceEqual || mTabWidth > 0 ? dp2px(0) : dp2px(20));
+                mTabSpaceEqual || mTabWidth > 0 ? dp2px(0) : dp2px(10));
 
         ta.recycle();
     }
