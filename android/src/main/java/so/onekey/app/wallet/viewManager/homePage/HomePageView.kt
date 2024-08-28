@@ -17,6 +17,7 @@ class HomePageView @JvmOverloads constructor(
         this.layoutParams = params;
 
         initRefreshListener()
+        removeElevation()
     }
 
 

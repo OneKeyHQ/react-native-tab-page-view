@@ -4,10 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewOutlineProvider
 import android.widget.FrameLayout
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.FragmentActivity
@@ -155,6 +157,11 @@ open class HomePageLayout @JvmOverloads constructor(
                     }
                 })
         }
+    }
+
+    fun removeElevation() {
+        content.findViewById<AppBarLayout>(R.id.appbar)?.outlineProvider = null
+        content.findViewById<CollapsingToolbarLayout>(R.id.toolbar)?.outlineProvider = ViewOutlineProvider.BOUNDS
     }
 
     fun setTabs(tabProps: MutableList<TabProps>) {
