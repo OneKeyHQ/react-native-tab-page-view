@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import type { RefObject } from 'react';
 import {
   View,
-  StyleSheet,
   Pressable,
   ScrollView,
   Animated,
@@ -34,24 +33,28 @@ interface PageHeaderViewProps extends ScrollViewProps {
   scrollContainerStyle?: object;
   contentContainerStyle?: object;
   containerStyle?: object;
+  itemContainerSelectedStyle?: object;
 }
 
 export default class PageHeaderView extends Component<PageHeaderViewProps> {
   private scrollPageIndex = this.props.initialScrollIndex ?? 0;
-  private scrollPageIndexValue = new Animated.Value(this.scrollPageIndex);
+  private scrollPageIndexValue = new Animated.Value(this.scrollPageIndex, {
+    useNativeDriver: false,
+  });
   private nextScrollPageIndex = -1;
   private shouldHandlerAnimationValue = true;
   private itemConfigList = this.props.data.map((_: any) => ({
     _animtedEnabledValue: new Animated.Value(1),
     _containerRef: React.createRef<View>(),
   }));
-  private itemContainerStyle = () =>
+  private itemContainerStyle = (index?: number) =>
     ({
       height: '100%',
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
       ...this.props.itemContainerStyle,
+      ...(this.props.itemContainerSelectedStyle)
     } as { flex?: number } & object);
   private itemTitleNormalStyle: () => {
     fontSize: number;
@@ -80,6 +83,7 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
   });
   private scrollView: RefObject<ScrollView> = React.createRef();
   private cursor: RefObject<PageHeaderCursor> = React.createRef();
+  private scrollViewWidth = 0;
 
   static defaultProps: PageHeaderViewProps = {
     data: [],
@@ -128,7 +132,7 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
         const itemLayout = this?.cursor?.current?.state
           ?.itemContainerLayoutList?.[newPageIndex] ?? { x: 0, width: 0 };
         this?.scrollView?.current?.scrollTo({
-          x: itemLayout.x - itemLayout.width,
+          x: itemLayout.x + itemLayout.width / 2.0 - this.scrollViewWidth / 2.0,
         });
         this.scrollPageIndex = newPageIndex;
       }
@@ -217,7 +221,7 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
         this.scrollPageIndexValue,
         index,
         this.props.selectedPageIndexDuration,
-        true
+        false
       );
     }
     this.props.onSelectedPageIndex?.(index);
@@ -232,7 +236,7 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
       <Pressable
         key={index}
         ref={this?.itemConfigList?.[index]?._containerRef}
-        style={this.itemContainerStyle()}
+        style={this.itemContainerStyle(index)}
         onPress={() => this._itemDidTouch(item, index)}
       >
         {content}
@@ -265,8 +269,9 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
   }
 
   override render() {
+    const { style, ...restProps } = this.props;
     return (
-      <View style={this.props.style}>
+      <View style={style}>
         <ScrollView
           onContentSizeChange={(width, height) => {
             this?.cursor?.current?.reloadItemListContainerLayout(
@@ -275,16 +280,18 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
             );
             this?.props?.onContentSizeChange?.(width, height);
           }}
-          {...this.props}
+          onLayout={(event) => {
+            this.scrollViewWidth = event.nativeEvent.layout.width;
+            this?.props?.onLayout?.(event);
+          }}
+          style={this.props.containerStyle}
+          {...restProps}
           contentContainerStyle={[
             { width: this.itemContainerStyle()?.flex ? '100%' : null },
             this.props.scrollContainerStyle,
           ]}
           ref={this.scrollView}
         >
-          <View
-            style={[StyleSheet.absoluteFill, this.props.containerStyle]}
-          ></View>
           <View
             style={[
               { minWidth: '100%', flexDirection: 'row', alignItems: 'center' },
