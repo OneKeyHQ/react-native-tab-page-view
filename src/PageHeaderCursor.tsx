@@ -44,7 +44,7 @@ export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
 
   private _findPercentCursorWidth = () => {
     const { width } = this.props.cursorStyle as any;
-    if (typeof width == 'string') {
+    if (typeof width === 'string') {
       return width.match(/(\d+(\.\d+)?)%/)?.[1];
     }
     return null;
@@ -149,7 +149,7 @@ export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
           {this.props.renderCursor ? (
             this.props.renderCursor()
           ) : (
-            <Animated.View style={contentStyle}></Animated.View>
+            <Animated.View style={contentStyle} />
           )}
         </Animated.View>
       </View>
