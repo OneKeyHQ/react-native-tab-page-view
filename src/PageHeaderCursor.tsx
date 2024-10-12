@@ -44,7 +44,7 @@ export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
 
   private _findPercentCursorWidth = () => {
     const { width } = this.props.cursorStyle as any;
-    if (typeof width == 'string') {
+    if (typeof width === 'string') {
       return width.match(/(\d+(\.\d+)?)%/)?.[1];
     }
     return null;
@@ -78,7 +78,7 @@ export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
                 const width = item.width - left - right;
                 return isWidth
                   ? (width * Number(percentWidth ?? 100)) / 100
-                  : item.x + width / 2.0 + left;
+                  : item.x + left;
               }
             } else {
               return 0;
@@ -113,11 +113,11 @@ export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
   override render() {
     const fixCursorWidth = this._findFixCursorWidth();
     const translateX = this._reloadPageIndexValue(false);
-    const scaleX = this._reloadPageIndexValue(true);
+    const widthX = this._reloadPageIndexValue(true);
 
     const containerStyle: Animated.WithAnimatedObject<any> = {
-      transform: [{ translateX }, fixCursorWidth ? { scale: 1 } : { scaleX }],
-      width: fixCursorWidth ?? 1,
+      transform: [{ translateX }],
+      width: fixCursorWidth ?? widthX,
       position: 'absolute',
       top: 0,
       bottom: 0,
@@ -127,7 +127,7 @@ export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
 
     const contentStyle = [
       this.props.cursorStyle,
-      { left: null, right: null, width: fixCursorWidth ?? 1 },
+      { left: null, right: null, width: fixCursorWidth ?? widthX },
     ];
 
     return (
@@ -149,7 +149,7 @@ export default class PageHeaderCursor extends Component<PageHeaderCursorProps> {
           {this.props.renderCursor ? (
             this.props.renderCursor()
           ) : (
-            <View style={contentStyle}></View>
+            <Animated.View style={contentStyle} />
           )}
         </Animated.View>
       </View>

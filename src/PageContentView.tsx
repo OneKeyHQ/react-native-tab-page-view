@@ -64,7 +64,7 @@ export default class PageContentView extends Component<PageContentViewProps> {
       },
     ],
     {
-      useNativeDriver: true,
+      useNativeDriver: false,
     }
   );
   private scrollView: RefObject<ContentFlatList> | null = React.createRef();

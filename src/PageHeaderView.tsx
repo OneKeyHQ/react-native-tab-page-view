@@ -37,7 +37,9 @@ interface PageHeaderViewProps extends ScrollViewProps {
 
 export default class PageHeaderView extends Component<PageHeaderViewProps> {
   private scrollPageIndex = this.props.initialScrollIndex ?? 0;
-  private scrollPageIndexValue = new Animated.Value(this.scrollPageIndex);
+  private scrollPageIndexValue = new Animated.Value(this.scrollPageIndex, {
+    useNativeDriver: false,
+  });
   private nextScrollPageIndex = -1;
   private shouldHandlerAnimationValue = true;
   private itemConfigList = this.props.data.map((_: any) => ({
@@ -217,7 +219,7 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
         this.scrollPageIndexValue,
         index,
         this.props.selectedPageIndexDuration,
-        true
+        false
       );
     }
     this.props.onSelectedPageIndex?.(index);
