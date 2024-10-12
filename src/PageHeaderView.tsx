@@ -234,7 +234,7 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
       <Pressable
         key={index}
         ref={this?.itemConfigList?.[index]?._containerRef}
-        style={this.itemContainerStyle(index)}
+        style={this.itemContainerStyle()}
         onPress={() => this._itemDidTouch(item, index)}
       >
         {content}
