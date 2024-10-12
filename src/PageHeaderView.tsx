@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import type { RefObject } from 'react';
 import {
   View,
-  StyleSheet,
   Pressable,
   ScrollView,
   Animated,
@@ -80,6 +79,7 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
   });
   private scrollView: RefObject<ScrollView> = React.createRef();
   private cursor: RefObject<PageHeaderCursor> = React.createRef();
+  private scrollViewWidth = 0;
 
   static defaultProps: PageHeaderViewProps = {
     data: [],
@@ -128,7 +128,7 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
         const itemLayout = this?.cursor?.current?.state
           ?.itemContainerLayoutList?.[newPageIndex] ?? { x: 0, width: 0 };
         this?.scrollView?.current?.scrollTo({
-          x: itemLayout.x - itemLayout.width,
+          x: itemLayout.x + itemLayout.width / 2.0 - this.scrollViewWidth / 2.0,
         });
         this.scrollPageIndex = newPageIndex;
       }
@@ -265,8 +265,9 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
   }
 
   override render() {
+    const { style, ...restProps } = this.props;
     return (
-      <View style={this.props.style}>
+      <View style={style}>
         <ScrollView
           onContentSizeChange={(width, height) => {
             this?.cursor?.current?.reloadItemListContainerLayout(
@@ -275,16 +276,18 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
             );
             this?.props?.onContentSizeChange?.(width, height);
           }}
-          {...this.props}
+          onLayout={(event) => {
+            this.scrollViewWidth = event.nativeEvent.layout.width;
+            this?.props?.onLayout?.(event);
+          }}
+          style={this.props.containerStyle}
+          {...restProps}
           contentContainerStyle={[
             { width: this.itemContainerStyle()?.flex ? '100%' : null },
             this.props.scrollContainerStyle,
           ]}
           ref={this.scrollView}
         >
-          <View
-            style={[StyleSheet.absoluteFill, this.props.containerStyle]}
-          ></View>
           <View
             style={[
               { minWidth: '100%', flexDirection: 'row', alignItems: 'center' },
