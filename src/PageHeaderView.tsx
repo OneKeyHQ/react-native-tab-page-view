@@ -33,7 +33,6 @@ interface PageHeaderViewProps extends ScrollViewProps {
   scrollContainerStyle?: object;
   contentContainerStyle?: object;
   containerStyle?: object;
-  itemContainerSelectedStyle?: object;
 }
 
 export default class PageHeaderView extends Component<PageHeaderViewProps> {
@@ -47,14 +46,13 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
     _animtedEnabledValue: new Animated.Value(1),
     _containerRef: React.createRef<View>(),
   }));
-  private itemContainerStyle = (index?: number) =>
+  private itemContainerStyle = () =>
     ({
       height: '100%',
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
       ...this.props.itemContainerStyle,
-      ...(this.props.itemContainerSelectedStyle)
     } as { flex?: number } & object);
   private itemTitleNormalStyle: () => {
     fontSize: number;
