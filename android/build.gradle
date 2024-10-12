@@ -1,8 +1,10 @@
 plugins {
     id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
+	namespace 'so.onekey.app.wallet.widget'
     compileSdk rootProject.ext.compileSdkVersion
 
     defaultConfig {
@@ -20,11 +22,20 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17.majorVersion
     }
 }
 
 dependencies {
     implementation 'com.facebook.react:react-native:+'
+    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation "androidx.appcompat:appcompat:1.0.0"
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+    implementation "androidx.constraintlayout:constraintlayout:2.1.4"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:1.2.0"
 }
