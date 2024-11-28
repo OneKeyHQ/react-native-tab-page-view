@@ -37,6 +37,7 @@
 
 @property (nonatomic, assign) BOOL refresh;
 @property (nonatomic, assign) BOOL disableRefresh;
+@property (nonatomic, assign) BOOL verticalScrollEnabled;
 @property (nonatomic, copy) NSString *spinnerColor;
 
 @property (nonatomic, weak) UIWindow *window;
@@ -52,6 +53,7 @@
   if (self){
     NSLog(@"PagingView init");
     [self startObservingViewPosition];
+    _verticalScrollEnabled = YES;
     _isScrolling = NO;
   }
   return self;
@@ -91,7 +93,6 @@
     }
   }
 }
-
 
 - (void)setPageIndex:(NSInteger)index{
   [self.tabView.categoryView selectItemAtIndex:index];
@@ -220,6 +221,13 @@
 }
 
 
+- (void) setVerticalScrollEnabled: (BOOL) verticalScrollEnabled {
+    if (_verticalScrollEnabled != verticalScrollEnabled) {
+        _verticalScrollEnabled = verticalScrollEnabled;
+        self.pagingView.mainTableView.scrollEnabled = verticalScrollEnabled;
+    }
+}
+
 -(JXPagerView *)pagingView {
   if (!_pagingView) {
     _pagingView = [[JXPagerView alloc] initWithDelegate:self];
@@ -237,6 +245,10 @@
     }
     [_pagingView.listContainerView.scrollView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:nil];
     [self addSubview:_pagingView];
+  }
+    
+  if (_pagingView != nil && _pagingView.mainTableView.scrollEnabled != self.verticalScrollEnabled) {
+    _pagingView.mainTableView.scrollEnabled = self.verticalScrollEnabled;
   }
   return _pagingView;
 }

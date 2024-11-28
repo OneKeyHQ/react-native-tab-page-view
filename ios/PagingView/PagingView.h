@@ -18,6 +18,8 @@ typedef NSString* _Nonnull (^RenderItemBlock)(NSDictionary *body);
 
 - (void)setRefresh:(BOOL)refresh;
 
+- (void)setVerticalScrollEnabled:(BOOL)verticalScrollEnabled;
+
 @end
 
 NS_ASSUME_NONNULL_END

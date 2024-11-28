@@ -56,6 +56,8 @@ open class HomePageLayout @JvmOverloads constructor(
     private var mAppBarExtended = true
     private var mHeaderHeight = 56
 
+    private var mVerticalScrollEnabled = true
+
     val eventDispatcher =
         (context as ReactContext).getNativeModule(UIManagerModule::class.java)?.eventDispatcher
 
@@ -135,6 +137,21 @@ open class HomePageLayout @JvmOverloads constructor(
     fun setRefresh(refresh: Boolean) {
         content.findViewById<SwipeRefreshLayout>(R.id.layout_refresh)?.let {
             it.isRefreshing = refresh
+        }
+    }
+
+    fun setVerticalScrollEnabled(enabled: Boolean) {
+        mVerticalScrollEnabled = enabled
+        content.findViewById<AppBarLayout>(R.id.appbar)?.let {
+            it.setExpanded(true, false)
+            val params = it.layoutParams as androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams
+            val behavior = AppBarLayout.Behavior()
+            behavior.setDragCallback(object : AppBarLayout.Behavior.DragCallback() {
+                override fun canDrag(appBarLayout: AppBarLayout): Boolean {
+                    return mVerticalScrollEnabled
+                }
+            })
+            params.behavior = behavior
         }
     }
 
