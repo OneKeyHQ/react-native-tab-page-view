@@ -24,8 +24,9 @@ data class TabProps(
 
 class HomePageManager : ViewGroupManager<HomePageView>() {
     companion object {
-        const val COMMAND_SET_PAGE_INDEX = "setPageIndex"
-        const val COMMAND_SET_REFRESHING = "setRefreshing"
+        const val COMMAND_SET_PAGE_INDEX = 1
+        const val COMMAND_SET_REFRESHING = 2
+        const val COMMAND_SET_VERTICAL_SCROLL_ENABLED = 3
     }
 
     private val REACT_CLASS = "NestedTabView"
@@ -137,8 +138,15 @@ class HomePageManager : ViewGroupManager<HomePageView>() {
         )
     }
 
+    override fun getCommandsMap(): Map<String, Int> {
+        return mapOf(
+            "setPageIndex" to COMMAND_SET_PAGE_INDEX,
+            "setRefreshing" to COMMAND_SET_REFRESHING,
+            "setVerticalScrollEnabled" to COMMAND_SET_VERTICAL_SCROLL_ENABLED
+        )
+    }
 
-    override fun receiveCommand(view: HomePageView, commandId: String?, args: ReadableArray?) {
+    override fun receiveCommand(view: HomePageView, commandId: Int, args: ReadableArray?) {
         super.receiveCommand(view, commandId, args)
         when (commandId) {
             COMMAND_SET_PAGE_INDEX -> if (args != null) {
@@ -149,6 +157,11 @@ class HomePageManager : ViewGroupManager<HomePageView>() {
             COMMAND_SET_REFRESHING -> if (args != null) {
                 val refresh = args.getBoolean(0)
                 view.setRefresh(refresh)
+            }
+
+            COMMAND_SET_VERTICAL_SCROLL_ENABLED -> if (args != null) {
+                val enabled = args.getBoolean(0)
+                view.setVerticalScrollEnabled(enabled)
             }
         }
     }

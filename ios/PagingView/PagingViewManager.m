@@ -44,6 +44,15 @@ RCT_EXPORT_METHOD(setRefreshing:(nonnull NSNumber *)reactTag refreshing:(BOOL)re
     }];
 }
 
+RCT_EXPORT_METHOD(setVerticalScrollEnabled:(nonnull NSNumber *)reactTag verticalScrollEnabled:(BOOL)verticalScrollEnabled) {
+    [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
+        PagingView *view = (PagingView *)viewRegistry[reactTag];
+        if (!!view && [view isKindOfClass:[PagingView class]]) {
+            [view setVerticalScrollEnabled:verticalScrollEnabled];
+        }
+    }];
+}
+
 - (UIView *)view
 {
   return [[PagingView alloc] init];
