@@ -20,6 +20,8 @@ typedef NSString* _Nonnull (^RenderItemBlock)(NSDictionary *body);
 
 - (void)setVerticalScrollEnabled:(BOOL)verticalScrollEnabled;
 
+- (void)scrollToTop;
+
 @end
 
 NS_ASSUME_NONNULL_END

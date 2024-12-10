@@ -3,6 +3,7 @@ import { forwardRef, useImperativeHandle, useRef } from 'react';
 import {
   UIManager,
   findNodeHandle,
+  Platform,
   requireNativeComponent,
 } from 'react-native';
 
@@ -25,6 +26,16 @@ function NestedTabViewContainer(props: any, forwardRef: any) {
           );
         }
       },
+      scrollToTop: () => {
+        if (Platform.OS === 'ios' && ref?.current?._nativeTag) {
+          UIManager.dispatchViewManagerCommand(
+            findNodeHandle(ref.current._nativeTag),
+            UIManager.getViewManagerConfig('NestedTabView').Commands
+              .scrollToTop as number,
+            []
+          );
+        }
+      }
     }),
     []
   );
