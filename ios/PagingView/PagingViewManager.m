@@ -53,6 +53,15 @@ RCT_EXPORT_METHOD(setVerticalScrollEnabled:(nonnull NSNumber *)reactTag vertical
     }];
 }
 
+RCT_EXPORT_METHOD(scrollToTop:(nonnull NSNumber *)reactTag) {
+    [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
+        PagingView *view = (PagingView *)viewRegistry[reactTag];
+        if (!!view && [view isKindOfClass:[PagingView class]]) {
+            [view scrollToTop];
+        }
+    }];
+}
+
 - (UIView *)view
 {
   return [[PagingView alloc] init];

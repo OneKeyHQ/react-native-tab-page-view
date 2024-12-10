@@ -77,6 +77,7 @@
   self.displayLink = nil;
 }
 
+
 - (void)checkViewPosition {
   if (_pagingView) {
     BOOL isPhone = [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone;
@@ -226,6 +227,10 @@
         _verticalScrollEnabled = verticalScrollEnabled;
         self.pagingView.mainTableView.scrollEnabled = verticalScrollEnabled;
     }
+}
+
+- (void)scrollToTop {
+  [self.pagingView.mainTableView setContentOffset:CGPointMake(0, 0) animated:YES];
 }
 
 -(JXPagerView *)pagingView {
