@@ -190,6 +190,8 @@
     _tabView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), _tabView.model.height);
     _tabView.categoryView.listContainer = (id<JXCategoryViewListContainer>)self.pagingView.listContainerView;
     _tabView.categoryView.delegate = self;
+    _tabView.showToolBar = _showToolBar;
+    _tabView.toolBarView = self.reactSubviews.lastObject;
   }
   return _tabView;
 }
