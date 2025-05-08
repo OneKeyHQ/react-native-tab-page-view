@@ -59,6 +59,10 @@
   return self;
 }
 
+-(void)setShowToolBar:(BOOL)showToolBar {
+  _showToolBar = showToolBar;
+}
+
 -(void)setTabViewStyle:(NSDictionary *)tabViewStyle {
   _tabViewStyle = tabViewStyle;
   _model = [[RNTabViewModel alloc] initWithDictionary:tabViewStyle];
@@ -66,6 +70,10 @@
 
 -(void)setValues:(NSArray *)values {
   _values = values;
+}
+
+-(void)setToolBarView:(UIView *)toolBarView {
+  _toolBarView = toolBarView;
 }
 
 -(void)setDefaultIndex:(NSInteger)defaultIndex {
@@ -76,7 +84,20 @@
   [_categoryView removeFromSuperview];
   [_bottomLineView removeFromSuperview];
   _categoryView = nil;
-  [self addSubview:self.categoryView];
+
+  if (_showToolBar) {
+    UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, _model.height - 1)];
+    [containerView addSubview:self.categoryView];
+    [self addSubview:containerView];
+    
+    if (self.toolBarView) {
+        self.toolBarView.frame = CGRectMake(containerView.bounds.size.width - self.toolBarView.frame.size.width, 0, self.toolBarView.frame.size.width, _model.height - 1);
+        self.toolBarView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        [containerView addSubview:self.toolBarView];
+    }
+  } else {
+    [self addSubview:self.categoryView];
+  }
 }
 
 - (void)layoutSubviews {

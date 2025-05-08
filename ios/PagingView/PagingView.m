@@ -27,8 +27,10 @@
 @property (nonatomic, assign) NSInteger pageIndex;
 @property (nonatomic, assign) BOOL scrollEnabled;
 @property (nonatomic, assign) BOOL isScrolling;
+@property (nonatomic, assign) BOOL showToolBar;
 
 @property (nonatomic, strong) UIView *headerView;
+@property (nonatomic, strong) UIView *toolBarView;
 @property (nonatomic, strong) RNTabView *tabView;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 
@@ -118,6 +120,19 @@
     });
   }
 }
+- (void)setShowToolBar:(BOOL)isShowToolBar {
+  if (_showToolBar == isShowToolBar) { 
+    return;
+  }
+  _showToolBar = isShowToolBar;
+  if (_tabView) {
+    [_tabView setShowToolBar:isShowToolBar];
+  }
+}
+
+- (BOOL)showToolBar {
+  return _showToolBar;
+}
 
 -(void)setTabViewStyle:(NSDictionary *)tabViewStyle {
   if ([_tabViewStyle isEqualToDictionary:tabViewStyle]) {
@@ -142,7 +157,6 @@
     [_tabView reloadData];
     _tabView.categoryView.listContainer = (id<JXCategoryViewListContainer>)self.pagingView.listContainerView;
     _tabView.categoryView.delegate = self;
-    
   }
 }
 
@@ -182,6 +196,10 @@
 
 - (void)didUpdateReactSubviews {
   self.headerView = self.reactSubviews.firstObject;
+  if (_showToolBar) {
+    self.toolBarView = self.reactSubviews.lastObject;
+    [_tabView setToolBarView:self.toolBarView];
+  }
   [self.pagingView reloadData];
 }
 
@@ -305,7 +323,7 @@
 }
 
 - (NSInteger)numberOfListsInPagerView:(JXPagerView *)pagerView {
-  return self.reactSubviews.count - 1;
+  return self.showToolBar ? self.reactSubviews.count - 2 : self.reactSubviews.count - 1;
 }
 
 - (id<JXPagerViewListViewDelegate>)pagerView:(JXPagerView *)pagerView initListAtIndex:(NSInteger)index {
