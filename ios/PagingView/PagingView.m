@@ -198,10 +198,6 @@
 
 - (void)didUpdateReactSubviews {
   self.headerView = self.reactSubviews.firstObject;
-  if (_showToolBar) {
-    self.toolBarView = self.reactSubviews.lastObject;
-    [_tabView setToolBarView:self.toolBarView];
-  }
   [self.pagingView reloadData];
 }
 
