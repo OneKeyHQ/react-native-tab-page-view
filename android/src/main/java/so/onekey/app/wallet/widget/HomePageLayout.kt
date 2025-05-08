@@ -49,6 +49,7 @@ open class HomePageLayout @JvmOverloads constructor(
     private val mTabProps = mutableListOf<TabProps>()
     private val mTabTitles = mutableListOf<String>()
     private var mTabTitlesChange = false
+    private var mShowToolBar = false
 
     private var mTabViewStyle: TabViewStyle? = null
 
@@ -124,6 +125,8 @@ open class HomePageLayout @JvmOverloads constructor(
             )
         )
         params.collapseMode = CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PIN
+        // Set red background color for contentView
+        contentView.setBackgroundColor(android.graphics.Color.RED)
         contentView.addView(view, params)
     }
 
@@ -181,6 +184,13 @@ open class HomePageLayout @JvmOverloads constructor(
         content.findViewById<CollapsingToolbarLayout>(R.id.toolbar)?.outlineProvider = ViewOutlineProvider.BOUNDS
     }
 
+    fun setShowToolBar(show: Boolean) {
+        if (mShowToolBar == show) {
+            return
+        }
+        mShowToolBar = show
+    }
+
     fun setTabs(tabProps: MutableList<TabProps>) {
         // diff tabProps mTabProps
         for (i in 0 until tabProps.size) {
@@ -221,7 +231,12 @@ open class HomePageLayout @JvmOverloads constructor(
 
     fun getChildViewCount(): Int {
         val contentView = content.findViewById<CollapsingToolbarLayout>(R.id.toolbar)
-        return (contentView?.childCount ?: 0) + (getAdapter()?.itemCount ?: 0)
+        var count = (contentView?.childCount ?: 0) + (getAdapter()?.itemCount ?: 0)
+        return if (mShowToolBar) {
+            count - 1
+        } else {
+            count
+        }
     }
 
     fun getChildViewAt(index: Int): View? {
