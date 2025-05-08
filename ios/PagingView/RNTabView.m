@@ -80,11 +80,7 @@
   _defaultIndex = defaultIndex;
 }
 
-- (void)reloadData {
-  [_categoryView removeFromSuperview];
-  [_bottomLineView removeFromSuperview];
-  _categoryView = nil;
-
+-(void)addToolBarView {
   if (_showToolBar) {
     UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, _model.height - 1)];
     [containerView addSubview:self.categoryView];
@@ -97,6 +93,19 @@
     }
   } else {
     [self addSubview:self.categoryView];
+  }
+}
+
+- (void)reloadData {
+  [_categoryView removeFromSuperview];
+  [_bottomLineView removeFromSuperview];
+  _categoryView = nil;
+
+  if (_showToolBar) {
+    UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, _model.height - 1)];
+    [containerView addSubview:self.categoryView];
+    [self addSubview:containerView];
+    [self addToolBarView];
   }
 }
 
@@ -132,8 +141,7 @@
     _categoryView.indicators = @[lineView];
     _categoryView.titleColorGradientEnabled = YES;
     
-    [self addSubview:_categoryView];
-
+    [self addToolBarView];
   }
   return _categoryView;
 }

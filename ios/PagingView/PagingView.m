@@ -57,6 +57,7 @@
     [self startObservingViewPosition];
     _verticalScrollEnabled = YES;
     _isScrolling = NO;
+    _showToolBar = NO;
   }
   return self;
 }
@@ -124,9 +125,10 @@
   if (_showToolBar == isShowToolBar) { 
     return;
   }
-  _showToolBar = isShowToolBar;
+    _showToolBar = isShowToolBar;
   if (_tabView) {
     [_tabView setShowToolBar:isShowToolBar];
+    [self reloadTabView];
   }
 }
 
@@ -150,6 +152,8 @@
   if (_tabView) {
     _tabView.tabViewStyle = _tabViewStyle;
     _tabView.values = _values;
+    _tabView.showToolBar = _showToolBar;
+    _tabView.toolBarView = self.reactSubviews.lastObject;
     [_tabView reloadData];
     _tabView.categoryView.listContainer = (id<JXCategoryViewListContainer>)self.pagingView.listContainerView;
     _tabView.categoryView.delegate = self;
