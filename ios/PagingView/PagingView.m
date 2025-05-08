@@ -130,10 +130,6 @@
   }
 }
 
-- (BOOL)showToolBar {
-  return _showToolBar;
-}
-
 -(void)setTabViewStyle:(NSDictionary *)tabViewStyle {
   if ([_tabViewStyle isEqualToDictionary:tabViewStyle]) {
     return;
@@ -323,7 +319,7 @@
 }
 
 - (NSInteger)numberOfListsInPagerView:(JXPagerView *)pagerView {
-  return self.showToolBar ? self.reactSubviews.count - 2 : self.reactSubviews.count - 1;
+  return _showToolBar ? self.reactSubviews.count - 2 : self.reactSubviews.count - 1;
 }
 
 - (id<JXPagerViewListViewDelegate>)pagerView:(JXPagerView *)pagerView initListAtIndex:(NSInteger)index {
