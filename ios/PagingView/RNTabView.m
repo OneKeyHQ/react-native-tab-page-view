@@ -49,12 +49,14 @@
 
 @implementation RNTabView
 
-- (instancetype)initWithValues:(NSArray *)values tabViewStyle:(NSDictionary *)tabViewStyle {
+- (instancetype)initWithValues:(NSArray *)values tabViewStyle:(NSDictionary *)tabViewStyle toolBarView:(UIView *)toolBarView showToolBar:(BOOL)showToolBar {
   self = [super init];
   if (self){
     _values = values;
     _tabViewStyle = tabViewStyle;
     _model = [[RNTabViewModel alloc] initWithDictionary:tabViewStyle];
+    _toolBarView = toolBarView;
+    _showToolBar = showToolBar;
   }
   return self;
 }

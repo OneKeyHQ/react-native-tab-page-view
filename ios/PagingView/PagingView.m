@@ -185,7 +185,7 @@
 
 -(RNTabView *)tabView {
   if (!_tabView) {
-    _tabView = [[RNTabView alloc] initWithValues:_values tabViewStyle:_tabViewStyle];
+      _tabView = [[RNTabView alloc] initWithValues:_values tabViewStyle:_tabViewStyle toolBarView:_toolBarView showToolBar:_showToolBar];
     _tabView.defaultIndex = _defaultIndex;
     _tabView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), _tabView.model.height);
     _tabView.categoryView.listContainer = (id<JXCategoryViewListContainer>)self.pagingView.listContainerView;

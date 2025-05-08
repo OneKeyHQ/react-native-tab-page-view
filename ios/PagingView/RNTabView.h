@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSArray *values;
 @property (nonatomic, assign) NSInteger defaultIndex;
 
-- (instancetype)initWithValues:(NSArray *)values tabViewStyle:(NSDictionary *)tabViewStyle;
+- (instancetype)initWithValues:(NSArray *)values tabViewStyle:(NSDictionary *)tabViewStyle toolBarView:(UIView *)toolBarView showToolBar:(BOOL)showToolBar;
 
 - (void)reloadData;
 
