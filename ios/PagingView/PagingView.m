@@ -129,7 +129,7 @@
   if (_tabView) {
     [_tabView setShowToolBar:isShowToolBar];
     [self reloadTabView];
-  }3
+  }
 }
 
 -(void)setTabViewStyle:(NSDictionary *)tabViewStyle {
@@ -153,7 +153,7 @@
     _tabView.tabViewStyle = _tabViewStyle;
     _tabView.values = _values;
     _tabView.showToolBar = _showToolBar;
-    _tabView.toolBarView = self.reactSubviews.lastObject;
+    _tabView.toolBarView = _showToolBar ? self.reactSubviews.lastObject : nil;
     [_tabView reloadData];
     _tabView.categoryView.listContainer = (id<JXCategoryViewListContainer>)self.pagingView.listContainerView;
     _tabView.categoryView.delegate = self;
@@ -191,7 +191,7 @@
     _tabView.categoryView.listContainer = (id<JXCategoryViewListContainer>)self.pagingView.listContainerView;
     _tabView.categoryView.delegate = self;
     _tabView.showToolBar = _showToolBar;
-    _tabView.toolBarView = self.reactSubviews.lastObject;
+    _tabView.toolBarView = _showToolBar ? self.reactSubviews.lastObject : nil;
   }
   return _tabView;
 }
