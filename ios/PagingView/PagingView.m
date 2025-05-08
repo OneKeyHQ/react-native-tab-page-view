@@ -125,7 +125,7 @@
   if (_showToolBar == isShowToolBar) { 
     return;
   }
-    _showToolBar = isShowToolBar;
+  _showToolBar = isShowToolBar;
   if (_tabView) {
     [_tabView setShowToolBar:isShowToolBar];
     [self reloadTabView];
