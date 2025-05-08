@@ -125,8 +125,6 @@ open class HomePageLayout @JvmOverloads constructor(
             )
         )
         params.collapseMode = CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PIN
-        // Set red background color for contentView
-        contentView.setBackgroundColor(android.graphics.Color.RED)
         contentView.addView(view, params)
     }
 
