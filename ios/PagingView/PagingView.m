@@ -27,8 +27,10 @@
 @property (nonatomic, assign) NSInteger pageIndex;
 @property (nonatomic, assign) BOOL scrollEnabled;
 @property (nonatomic, assign) BOOL isScrolling;
+@property (nonatomic, assign) BOOL showToolBar;
 
 @property (nonatomic, strong) UIView *headerView;
+@property (nonatomic, strong) UIView *toolBarView;
 @property (nonatomic, strong) RNTabView *tabView;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 
@@ -55,6 +57,7 @@
     [self startObservingViewPosition];
     _verticalScrollEnabled = YES;
     _isScrolling = NO;
+    _showToolBar = NO;
   }
   return self;
 }
@@ -118,6 +121,16 @@
     });
   }
 }
+- (void)setShowToolBar:(BOOL)isShowToolBar {
+  if (_showToolBar == isShowToolBar) { 
+    return;
+  }
+  _showToolBar = isShowToolBar;
+  if (_tabView) {
+    [_tabView setShowToolBar:isShowToolBar];
+    [self reloadTabView];
+  }
+}
 
 -(void)setTabViewStyle:(NSDictionary *)tabViewStyle {
   if ([_tabViewStyle isEqualToDictionary:tabViewStyle]) {
@@ -139,10 +152,11 @@
   if (_tabView) {
     _tabView.tabViewStyle = _tabViewStyle;
     _tabView.values = _values;
+    _tabView.showToolBar = _showToolBar;
+    _tabView.toolBarView = _showToolBar ? self.reactSubviews.lastObject : nil;
     [_tabView reloadData];
     _tabView.categoryView.listContainer = (id<JXCategoryViewListContainer>)self.pagingView.listContainerView;
     _tabView.categoryView.delegate = self;
-    
   }
 }
 
@@ -171,11 +185,13 @@
 
 -(RNTabView *)tabView {
   if (!_tabView) {
-    _tabView = [[RNTabView alloc] initWithValues:_values tabViewStyle:_tabViewStyle];
+      _tabView = [[RNTabView alloc] initWithValues:_values tabViewStyle:_tabViewStyle toolBarView:_showToolBar ? self.reactSubviews.lastObject : nil showToolBar:_showToolBar];
     _tabView.defaultIndex = _defaultIndex;
     _tabView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), _tabView.model.height);
     _tabView.categoryView.listContainer = (id<JXCategoryViewListContainer>)self.pagingView.listContainerView;
     _tabView.categoryView.delegate = self;
+    _tabView.showToolBar = _showToolBar;
+    _tabView.toolBarView = _showToolBar ? self.reactSubviews.lastObject : nil;
   }
   return _tabView;
 }
@@ -305,7 +321,7 @@
 }
 
 - (NSInteger)numberOfListsInPagerView:(JXPagerView *)pagerView {
-  return self.reactSubviews.count - 1;
+  return _showToolBar ? self.reactSubviews.count - 2 : self.reactSubviews.count - 1;
 }
 
 - (id<JXPagerViewListViewDelegate>)pagerView:(JXPagerView *)pagerView initListAtIndex:(NSInteger)index {

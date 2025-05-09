@@ -49,14 +49,20 @@
 
 @implementation RNTabView
 
-- (instancetype)initWithValues:(NSArray *)values tabViewStyle:(NSDictionary *)tabViewStyle {
+- (instancetype)initWithValues:(NSArray *)values tabViewStyle:(NSDictionary *)tabViewStyle toolBarView:(UIView *)toolBarView showToolBar:(BOOL)showToolBar {
   self = [super init];
   if (self){
     _values = values;
     _tabViewStyle = tabViewStyle;
     _model = [[RNTabViewModel alloc] initWithDictionary:tabViewStyle];
+    _toolBarView = toolBarView;
+    _showToolBar = showToolBar;
   }
   return self;
+}
+
+-(void)setShowToolBar:(BOOL)showToolBar {
+  _showToolBar = showToolBar;
 }
 
 -(void)setTabViewStyle:(NSDictionary *)tabViewStyle {
@@ -68,15 +74,36 @@
   _values = values;
 }
 
+-(void)setToolBarView:(UIView *)toolBarView {
+  _toolBarView = toolBarView;
+}
+
 -(void)setDefaultIndex:(NSInteger)defaultIndex {
   _defaultIndex = defaultIndex;
+}
+
+-(void)addToolBarView {
+  if (_showToolBar) {
+    UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, _model.height - 1)];
+    [containerView addSubview:self.categoryView];
+    [self addSubview:containerView];
+    
+    if (self.toolBarView) {
+        self.toolBarView.frame = CGRectMake(containerView.bounds.size.width - self.toolBarView.frame.size.width, 0, self.toolBarView.frame.size.width, _model.height - 1);
+        self.toolBarView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        [containerView addSubview:self.toolBarView];
+    }
+  } else {
+    [self addSubview:self.categoryView];
+  }
 }
 
 - (void)reloadData {
   [_categoryView removeFromSuperview];
   [_bottomLineView removeFromSuperview];
   _categoryView = nil;
-  [self addSubview:self.categoryView];
+
+  [self addToolBarView];
 }
 
 - (void)layoutSubviews {
@@ -111,8 +138,7 @@
     _categoryView.indicators = @[lineView];
     _categoryView.titleColorGradientEnabled = YES;
     
-    [self addSubview:_categoryView];
-
+    [self addToolBarView];
   }
   return _categoryView;
 }
