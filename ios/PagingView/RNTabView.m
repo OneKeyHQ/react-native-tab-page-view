@@ -103,12 +103,7 @@
   [_bottomLineView removeFromSuperview];
   _categoryView = nil;
 
-  if (_showToolBar) {
-    UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, _model.height - 1)];
-    [containerView addSubview:self.categoryView];
-    [self addSubview:containerView];
-    [self addToolBarView];
-  }
+  [self addToolBarView];
 }
 
 - (void)layoutSubviews {
