@@ -23,6 +23,7 @@ RCT_EXPORT_VIEW_PROPERTY(tabViewStyle, NSDictionary);
 RCT_EXPORT_VIEW_PROPERTY(spinnerColor, NSString);
 RCT_EXPORT_VIEW_PROPERTY(refresh, BOOL);
 RCT_EXPORT_VIEW_PROPERTY(disableRefresh, BOOL);
+RCT_EXPORT_VIEW_PROPERTY(showToolBar, BOOL);
 RCT_EXPORT_VIEW_PROPERTY(onRefreshCallBack, RCTBubblingEventBlock)
 
 
