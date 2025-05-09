@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import type { RefObject } from 'react';
+import type { ReactElement, RefObject } from 'react';
 import {
   View,
   Pressable,
@@ -33,6 +33,7 @@ interface PageHeaderViewProps extends ScrollViewProps {
   scrollContainerStyle?: object;
   contentContainerStyle?: object;
   containerStyle?: object;
+  ToolBar?: ReactElement;
 }
 
 export default class PageHeaderView extends Component<PageHeaderViewProps> {
@@ -302,6 +303,7 @@ export default class PageHeaderView extends Component<PageHeaderViewProps> {
             })}
           </View>
         </ScrollView>
+        {this.props.ToolBar}
       </View>
     );
   }
