@@ -90,6 +90,9 @@ open class HomePageLayout @JvmOverloads constructor(
         LayoutInflater.from(context).inflate(R.layout.view_home_page, this, false).apply {
             addView(this)
         }
+    private val tabLayout by lazy {
+        content.findViewById<SlidingTabLayout2>(R.id.layout_tab)
+    }
 
     fun sendChangeTabsNativeEvent(index: Int, tabProps: TabProps) {
         eventDispatcher?.dispatchEvent(
@@ -144,7 +147,8 @@ open class HomePageLayout @JvmOverloads constructor(
         mVerticalScrollEnabled = enabled
         content.findViewById<AppBarLayout>(R.id.appbar)?.let {
             it.setExpanded(true, false)
-            val params = it.layoutParams as androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams
+            val params =
+                it.layoutParams as androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams
             val behavior = AppBarLayout.Behavior()
             behavior.setDragCallback(object : AppBarLayout.Behavior.DragCallback() {
                 override fun canDrag(appBarLayout: AppBarLayout): Boolean {
@@ -178,7 +182,12 @@ open class HomePageLayout @JvmOverloads constructor(
 
     fun removeElevation() {
         content.findViewById<AppBarLayout>(R.id.appbar)?.outlineProvider = null
-        content.findViewById<CollapsingToolbarLayout>(R.id.toolbar)?.outlineProvider = ViewOutlineProvider.BOUNDS
+        content.findViewById<CollapsingToolbarLayout>(R.id.toolbar)?.outlineProvider =
+            ViewOutlineProvider.BOUNDS
+    }
+
+    fun showToolBar(enabled: Boolean){
+        tabLayout.showToolBar(enabled)
     }
 
     fun setTabs(tabProps: MutableList<TabProps>) {
@@ -221,13 +230,18 @@ open class HomePageLayout @JvmOverloads constructor(
 
     fun getChildViewCount(): Int {
         val contentView = content.findViewById<CollapsingToolbarLayout>(R.id.toolbar)
-        return (contentView?.childCount ?: 0) + (getAdapter()?.itemCount ?: 0)
+        val rightViewCount = if (tabLayout.rightView != null) 1 else 0
+        return (contentView?.childCount ?: 0) + (getAdapter()?.itemCount ?: 0) + rightViewCount
     }
 
     fun getChildViewAt(index: Int): View? {
         if (index == 0) {
             val contentView = content.findViewById<CollapsingToolbarLayout>(R.id.toolbar)
             return contentView?.getChildAt(0)
+        }
+        val pageView = getAdapter()?.getPageView(index - 1)
+        if (pageView == null) {
+            return tabLayout.rightView
         }
         return getAdapter()?.getPageView(index - 1)
     }
@@ -240,6 +254,8 @@ open class HomePageLayout @JvmOverloads constructor(
             child.let {
                 getAdapter()?.addPageView(it, position = index - 1)
             }
+        } else if (index == mTabProps.size + 1) {
+            tabLayout.addRightView(child)
         }
         requestLayout()
     }
@@ -249,12 +265,16 @@ open class HomePageLayout @JvmOverloads constructor(
             removeHeaderView()
         } else if (index <= mTabProps.size) {
             getAdapter()?.removePageViewAt(index - 1)
+        } else if (index == mTabProps.size + 1) {
+            tabLayout.removeRightView()
         }
     }
 
     fun removeChildView(view: View?) {
         if (getHeaderView() == view) {
             removeHeaderView()
+        } else if (tabLayout?.rightView == view) {
+            tabLayout?.removeRightView()
         } else {
             getAdapter()?.removePageView(view)
         }
@@ -273,7 +293,6 @@ open class HomePageLayout @JvmOverloads constructor(
         fragmentActivity: FragmentActivity,
         titles: List<String>
     ): RecyclerView.Adapter<*> {
-        val tabLayout = content.findViewById<SlidingTabLayout2>(R.id.layout_tab)
         val viewpager = content.findViewById<ViewPager2>(R.id.viewpager)
 
         val adapter = SimplePagerAdapter()
@@ -292,7 +311,7 @@ open class HomePageLayout @JvmOverloads constructor(
     }
 
     fun updateTabsTitle() {
-        content.findViewById<SlidingTabLayout2>(R.id.layout_tab)?.let { tabView ->
+        tabLayout?.let { tabView ->
             mTabViewStyle?.let { tabViewStyle ->
                 tabView.isTabSpaceEqual = tabViewStyle.tabSpaceEqual
                 tabView.indicatorColor = Color.parseColor(tabViewStyle.indicatorColor)

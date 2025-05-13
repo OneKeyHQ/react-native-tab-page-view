@@ -124,6 +124,11 @@ class HomePageManager : ViewGroupManager<HomePageView>() {
         view.setRefresh(refresh)
     }
 
+    @ReactProp(name = "showToolBar")
+    fun showToolBar(view: HomePageView, refresh: Boolean) {
+        view.showToolBar(refresh)
+    }
+
     override fun getExportedCustomBubblingEventTypeConstants(): Map<String, Any> {
         return mapOf(
             PageSelectedEvent.EVENT_NAME to mapOf(

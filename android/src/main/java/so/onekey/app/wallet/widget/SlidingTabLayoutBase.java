@@ -34,6 +34,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.facebook.react.views.view.ReactViewGroup;
+
 import so.onekey.app.wallet.widget.listener.OnTabSelectListener;
 import so.onekey.app.wallet.widget.transition.ITabScaleTransformer;
 import so.onekey.app.wallet.widget.transition.TabScaleTransformer;
@@ -47,6 +49,9 @@ public abstract class SlidingTabLayoutBase extends HorizontalScrollView {
     private Context mContext;
     protected ArrayList<String> mTitles;
     private LinearLayout mTabsContainer;
+    private LinearLayout mRootContainer;
+    private ReactViewGroup mRightView;
+    private boolean mShowToolBar = true;
     protected int mCurrentTab;
     protected float mCurrentPositionOffset;
     protected int mTabCount;
@@ -136,9 +141,15 @@ public abstract class SlidingTabLayoutBase extends HorizontalScrollView {
         setClipToPadding(false);
 
         this.mContext = context;
-        mTabsContainer = new LinearLayout(context);
-        addView(mTabsContainer);
+        mRootContainer = new LinearLayout(context);
+        mRootContainer.setOrientation(LinearLayout.HORIZONTAL);
+        mRootContainer.setGravity(Gravity.CENTER_VERTICAL);
 
+        mTabsContainer = new LinearLayout(context);
+        mTabsContainer.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1));
+        mRootContainer.addView(mTabsContainer);
+
+        addView(mRootContainer);
         obtainAttributes(context, attrs);
 
         tabScaleTransformer = new TabScaleTransformer(this, mSelectTextSize, mTextsize);
@@ -861,5 +872,43 @@ public abstract class SlidingTabLayoutBase extends HorizontalScrollView {
     protected int sp2px(float sp) {
         final float scale = this.mContext.getResources().getDisplayMetrics().scaledDensity;
         return (int) (sp * scale + 0.5f);
+    }
+
+    public void showToolBar(boolean enable) {
+        mShowToolBar = enable;
+        if (mRightView == null) {
+            return;
+        }
+        if (mRightView.getChildCount() == 0) {
+            return;
+        }
+        mRightView.getChildAt(0).setVisibility(mShowToolBar ? VISIBLE : GONE);
+    }
+
+    public View getRightView() {
+        if (mRightView == null) {
+            return null;
+        }
+        return mRightView.getChildAt(0);
+    }
+
+    public void addRightView(View view) {
+        if (mRightView != null) {
+            mRootContainer.removeView(mRightView);
+        }
+
+        if (view != null) {
+            mRightView = (ReactViewGroup) view;
+            ReactViewGroup.LayoutParams params = new ReactViewGroup.LayoutParams(dp2px(42), ViewGroup.LayoutParams.MATCH_PARENT);
+            view.setVisibility(mShowToolBar ? VISIBLE : GONE);
+            mRootContainer.addView(mRightView, params);
+        }
+    }
+
+    public void removeRightView() {
+        if (mRightView != null) {
+            mRootContainer.removeView(mRightView);
+            mRightView = null;
+        }
     }
 }
