@@ -103,8 +103,8 @@ class HomePageManager : ViewGroupManager<HomePageView>() {
             for (i in 0 until tabs.size()) {
 
                 val tab = tabs.getMap(i)
-                val name = tab.getString("name")
-                val label = tab.getString("label")
+                val name = tab?.getString("name")
+                val label = tab?.getString("label")
 
                 if (name != null && label != null) {
                     list.add(TabProps(name, label))
@@ -175,8 +175,8 @@ class HomePageManager : ViewGroupManager<HomePageView>() {
         return parent.getChildViewCount()
     }
 
-    override fun getChildAt(parent: HomePageView?, index: Int): View {
-        return parent?.getChildViewAt(index)!!
+    override fun getChildAt(parent: HomePageView, index: Int): View? {
+        return parent.getChildViewAt(index)
     }
 
     // props change
@@ -185,25 +185,21 @@ class HomePageManager : ViewGroupManager<HomePageView>() {
         view.updateTabsTitle()
     }
 
-    override fun addView(parent: HomePageView?, child: View?, index: Int) {
-        if (parent == null) return
+    override fun addView(parent: HomePageView, child: View, index: Int) {
         parent.addChildView(child, index)
     }
 
-    override fun addViews(parent: HomePageView?, views: MutableList<View>?) {
-        if (parent == null) return
+    override fun addViews(parent: HomePageView, views: MutableList<View>) {
         views?.forEachIndexed { index, view ->
             addView(parent, view, index)
         }
     }
 
-    override fun removeViewAt(parent: HomePageView?, index: Int) {
-        if (parent == null) return
+    override fun removeViewAt(parent: HomePageView, index: Int) {
         parent.removeChildViewAt(index)
     }
 
-    override fun removeView(parent: HomePageView?, view: View?) {
-        if (parent == null) return
+    override fun removeView(parent: HomePageView, view: View) {
         parent.removeChildView(view)
     }
 
