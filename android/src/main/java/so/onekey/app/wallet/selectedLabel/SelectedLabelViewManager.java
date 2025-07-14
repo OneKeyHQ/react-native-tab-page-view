@@ -12,8 +12,6 @@ import com.facebook.react.views.text.ReactTypefaceUtils;
 
 import javax.annotation.Nullable;
 
-import static com.facebook.react.views.text.ReactBaseTextShadowNode.UNSET;
-
 public class SelectedLabelViewManager extends SimpleViewManager<SelectedLabel> {
 
     @NonNull
